@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from main.forms import ProductForm
@@ -14,6 +15,7 @@ import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse;
 # Create your views here.
 
 
@@ -22,7 +24,7 @@ def show_main(request):
     products = Product.objects.filter(user=request.user)
 
     context = {
-        'name': 'Dhafin',
+        'name': request.user.username,
         'class': 'PBP F',
         'products': products,
         'last_login': request.COOKIES['last_login'],
@@ -68,9 +70,9 @@ def show_xml(request):
 
 
 def show_json(request):
-    def show_json(request):
-        data = Product.objects.all()
-        return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+    data = Product.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 
 def show_xml_by_id(request, id):
@@ -141,3 +143,22 @@ def add_product_ajax(request):
         return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_product = Product.objects.create(
+            user = request.user,
+            name = data["name"],
+            price = int(data["price"]),
+            description = data["description"]
+        )
+
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)

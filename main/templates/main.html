@@ -1,9 +1,46 @@
 {% extends 'base.html' %} {% block content %}
 
+<style>
+  #navbar {
+    width: 100vw;
+    height: 50px;
+    position: fixed;
+    display: flex;
+    background-color: indigo;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #navbar-title {
+    margin-left: 40px;
+  }
+
+  #navbar-app-container {
+    display: flex;
+    column-gap: 20px;
+    margin-right: 40px;
+  }
+
+  .navbar-app a {
+    text-decoration: none;
+    color: white;
+  }
+</style>
+
+<div id="navbar">
+  <div id="navbar-title">SHOPPING LIST</div>
+  <div id="navbar-name">Welcome! {{ name }}</div>
+  <div id="navbar-app-container">
+    <div class="navbar-app"><a href="{% url 'main:create_product' %}">Add Product</a></div>
+    <div class="navbar-app"><a href="{% url 'main:logout' %}">Logout</a></div>
+  </div>
+</div>
+
 <h1>Shopping List Page</h1>
 
 <h5>Name:</h5>
-<p>{{name}}</p>
+<p>{{ name }}</p>
 
 <h5>Class:</h5>
 <p>{{class}}</p>
